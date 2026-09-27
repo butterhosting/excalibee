@@ -1,0 +1,47 @@
+@import "tailwindcss";
+
+/**
+ * Theme settings and variables
+ * https://tailwindcss.com/docs/theme#theme-variable-namespaces
+ */
+@theme {
+    /* DESKTOP FIRST / PART A -> https://stackoverflow.com/a/79607480 */
+    --breakpoint-*: initial;
+    /* Colors (see the Tokens frame in uxui.sketch) */
+    --color-c-accent: #74dfa2;
+    --color-c-accent-dark: #3fbf78;
+    --color-c-error: #e8452c;
+    --color-c-dark-full: #1e1e24;
+    --color-c-dark-half: #7a7a85;
+    --color-c-paper: #fbf9f3;
+    --color-c-line: #e2ded2;
+    --color-c-tint: #e6f8ee;
+}
+
+/* DESKTOP FIRST / PART B -> https://stackoverflow.com/a/79607480 */
+@custom-variant 2xl (@media (max-width: 1535px));
+@custom-variant xl (@media (max-width: 1279px));
+@custom-variant lg (@media (max-width: 1023px));
+@custom-variant md (@media (max-width: 767px));
+@custom-variant sm (@media (max-width: 639px));
+
+/**
+ * Default styling and global css rules
+ */
+@layer base {
+    html {
+        font-size: 14px;
+    }
+    body {
+        @apply relative min-w-[320px] min-h-screen text-c-dark-full bg-c-paper;
+        font-family:
+            Inter,
+            system-ui,
+            -apple-system,
+            "Segoe UI",
+            sans-serif;
+    }
+    #root {
+        @apply min-h-screen flex flex-col w-full;
+    }
+}

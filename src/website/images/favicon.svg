@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 46 200 90">
+  <!-- the Excaliself mark without its underline: three tiles on a grey step read better than the full lockup at 16px -->
+  <rect x="13" y="81" width="50" height="44" rx="10" fill="#5f5f68"/>
+  <rect x="82" y="61" width="50" height="44" rx="10" fill="#5f5f68"/>
+  <rect x="151" y="81" width="50" height="44" rx="10" fill="#5f5f68"/>
+  <rect x="6" y="74" width="50" height="44" rx="10" fill="#74dfa2" stroke="#1e1e24" stroke-width="8"/>
+  <rect x="75" y="54" width="50" height="44" rx="10" fill="#74dfa2" stroke="#1e1e24" stroke-width="8"/>
+  <rect x="144" y="74" width="50" height="44" rx="10" fill="#74dfa2" stroke="#1e1e24" stroke-width="8"/>
+  <path d="M56 96 C 66 96, 66 76, 75 76 M125 76 C 134 76, 134 96, 144 96" fill="none" stroke="#1e1e24" stroke-width="8" stroke-linecap="round"/>
+</svg>

@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1790514268857,
+      "tag": "0000_create_folder",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1790514269299,
+      "tag": "0001_create_drawing",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1790514269745,
+      "tag": "0002_create_drawing_content",
+      "breakpoints": true
+    }
+  ]
+}
