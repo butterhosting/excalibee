@@ -10,7 +10,7 @@ export class FolderRepository {
 
   public async list(): Promise<Folder[]> {
     const folders = await this.sqlite.query.$folder.findMany({
-      orderBy: $folder.name,
+      orderBy: [$folder.name, $folder.id],
     });
     return folders.map((folder) => FolderConverter.fromDatabase(folder));
   }

@@ -1,5 +1,6 @@
 import { TestEnvironment } from "@/testing/TestEnvironment.test";
 import { TestFixture } from "@/testing/TestFixture.test";
+import { Temporal } from "@js-temporal/polyfill";
 import { beforeEach, describe, expect, it } from "bun:test";
 import { PersistenceError } from "./error/PersistenceError";
 import { DrawingRepository } from "./DrawingRepository";
@@ -68,6 +69,18 @@ describe(DrawingRepository.name, () => {
     expect(cleared?.scene).toEqual(TestFixture.scene("Changed"));
     expect(cleared?.thumbnail).toBeUndefined();
     expect(await repository.updateContent("does-not-exist", { scene })).toBeUndefined();
+  });
+
+  it("should keep a stable order when two drawings share a timestamp", async () => {
+    // given (the same instant, as a coarse clock hands out; ids are time-ordered)
+    const created = Temporal.Now.instant();
+    const first = TestFixture.drawing({ name: "First", created });
+    const second = TestFixture.drawing({ name: "Second", created });
+    await repository.create(second, { drawingId: second.id, scene: TestFixture.scene() });
+    await repository.create(first, { drawingId: first.id, scene: TestFixture.scene() });
+
+    // then
+    expect((await repository.list()).map((d) => d.name)).toEqual(["First", "Second"]);
   });
 
   it("should keep sibling names unique, ignoring case, at the top level too", async () => {

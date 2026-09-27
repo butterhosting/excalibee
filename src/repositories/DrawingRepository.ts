@@ -10,8 +10,9 @@ export class DrawingRepository {
   public constructor(private readonly sqlite: Sqlite) {}
 
   public async list(): Promise<Drawing[]> {
+    // two rows can share a `created` when the clock is coarse (it happened on a CI runner), so the time-ordered id decides
     const drawings = await this.sqlite.query.$drawing.findMany({
-      orderBy: $drawing.created,
+      orderBy: [$drawing.created, $drawing.id],
     });
     return drawings.map((drawing) => DrawingConverter.fromDatabase(drawing));
   }
