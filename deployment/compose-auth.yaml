@@ -1,0 +1,24 @@
+services:
+  # Creates root-owned directories in the volume before excaliself starts.
+  # This simulates a real deployment where bind mounts or pre-existing
+  # volumes are owned by root — the scenario where the entrypoint's
+  # chown is actually needed.
+  init:
+    image: alpine
+    volumes:
+      - excaliself:/opt/excaliself
+    command: ["sh", "-c", "mkdir -p /opt/excaliself/data"]
+
+  excaliself:
+    image: butterhosting/excaliself:latest
+    ports:
+      - "3000:3000"
+    volumes:
+      - excaliself:/opt/excaliself
+      - ./.htpasswd:/opt/excaliself/.htpasswd:ro
+    depends_on:
+      init:
+        condition: service_completed_successfully
+
+volumes:
+  excaliself:

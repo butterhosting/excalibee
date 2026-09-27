@@ -17,7 +17,8 @@
     "e2e:headless": "playwright test --max-failures 1",
     "start:dev": "bun --env-file=.env.dev --hot src/index.ts",
     "start:e2e": "bun --env-file=.env.e2e src/index.ts",
-    "start:prod": "bun --env-file=.env.prod src/index.ts"
+    "start:prod": "bun --env-file=.env.prod src/index.ts",
+    "test:deployment": "deployment/test.sh"
   },
   "dependencies": {
     "@excalidraw/excalidraw": "^0.18.1",

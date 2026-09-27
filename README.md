@@ -1,24 +1,26 @@
-# Excaliself
+# Excaliself: Simple Excalidraw for Self-Hosters
 
-Self-hosted [Excalidraw](https://excalidraw.com) with a library: drawings are stored on your own server, in nested
-folders, with thumbnails and full-text search over the text inside them. By [Butterhost.ing](https://butterhost.ing).
+![the Excalidraw editor with an architecture drawing open, an Excaliself bar above it showing the folder path, the drawing's name and its autosave status](.readme/screenshot.png)
 
-## Run
+## Summary
+
+Excaliself is a simple, self-hosted Excalidraw library.
+
+It is the Excalidraw editor you already know, with a place to keep your drawings: a library of nested folders on your own server, with thumbnails, search over the text inside every drawing, and nothing leaving your machine. No accounts, no cloud, no CDN.
+
+Start the Excaliself container, and receive:
+
+- the full Excalidraw editor, including export to PNG and SVG and copying selections to the clipboard
+- a persisted library with custom folder support
+- search across folders, by name and by the text inside a drawing
+- ... and much more!
+
+## Quickstart / Demo
 
 ```sh
-bun install
-bun start:dev          # http://localhost:3000
+docker run --rm -p 3000:3000 butterhosting/excaliself
 ```
 
-`bun tc`, `bun lint` and `bun test:unit` are the gates; `bun e2e:headless` drives the production image through Playwright.
-`./image.sh create` builds that image from the `Dockerfile` (`--stage` picks the `.env.*` to bake in); `bun dev` runs it in compose on `Dockerfile.dev`.
+## Documentation
 
-## How it stores things
-
-Everything lives in one SQLite file under `EXCALISELF_ROOT`. A drawing's metadata (`drawing`) is kept apart from its scene
-and thumbnail (`drawing_content`) so that listing the library never reads the heavy rows. Folders nest through a self
-reference, and the foreign keys cascade: deleting a folder takes its subfolders and drawings with it.
-
-The editor autosaves a debounced 1.5 s after the last change and renders the thumbnail itself; the server derives the search
-text from the scene on every save. Excalidraw's fonts and locales are served from the installed package (`/excalidraw/*`),
-so nothing is fetched from a CDN.
+Please visit [www.butterhost.ing/excaliself](https://www.butterhost.ing/excaliself) for the full documentation, covering deployment, the library, the editor, tips, tricks and more.
