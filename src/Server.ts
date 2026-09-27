@@ -192,7 +192,7 @@ export class Server {
             ]
           : [
               `  \x1b[1mMode\x1b[0m      Running normally`, //
-              `            https://example.com/excaliself/love`, //
+              `            https://butterhost.ing/excaliself/love`, //
             ]),
         "",
       ].join("\n"),
