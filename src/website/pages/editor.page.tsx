@@ -11,7 +11,6 @@ import { DialogClient } from "../clients/DialogClient";
 import { DrawingClient } from "../clients/DrawingClient";
 import { FolderClient } from "../clients/FolderClient";
 import { Button } from "../comps/Button";
-import { Logo } from "../comps/Logo";
 import { Spinner } from "../comps/Spinner";
 import { useDocumentTitle } from "../hooks/useDocumentTitle";
 import { useRegistry } from "../hooks/useRegistry";
@@ -91,7 +90,7 @@ namespace Internal {
     const api = useRef<ExcalidrawImperativeAPI>(null);
     const savedVersion = useRef<string>(undefined);
     const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
-    useDocumentTitle(`${drawing.name} | Excaliself`);
+    useDocumentTitle(`${drawing.name} | Excalibee`);
 
     const path = (() => {
       const names: string[] = [];
@@ -132,7 +131,11 @@ namespace Internal {
             )
           : null;
         const updated = await drawingClient.saveScene(drawing.id, {
-          scene: { elements: elements as unknown as Record<string, unknown>[], appState: persisted, files: a.getFiles() as Record<string, unknown> },
+          scene: {
+            elements: elements as unknown as Record<string, unknown>[],
+            appState: persisted,
+            files: a.getFiles() as Record<string, unknown>,
+          },
           thumbnail,
         });
         savedVersion.current = version;
@@ -205,7 +208,6 @@ namespace Internal {
             <Icon.ArrowLeft className="size-4" />
             Library
           </Link>
-          <Logo.Mark className="h-7 ml-1" />
           <div className="flex-1 flex items-center justify-center min-w-0">
             <button
               type="button"

@@ -18,7 +18,7 @@ const env = Env.initialize();
 /**
  * Create the main directories
  */
-await mkdir(dirname(env.EXCALISELF_DATABASE), { recursive: true });
+await mkdir(dirname(env.EXCALIBEE_DATABASE), { recursive: true });
 
 /**
  * Initialize the database

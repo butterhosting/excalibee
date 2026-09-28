@@ -16,13 +16,13 @@ describe("SupportToken", async () => {
 
   it("successfully validates a correct token", () => {
     // given
-    const token = sign("v=1;t=1773490583;app=excaliself;amt=1000;cur=usd");
+    const token = sign("v=1;t=1773490583;app=excalibee;amt=1000;cur=usd");
     // when
     const supportToken = SupportToken.verify({ hexToken: encode(token), publicKey: Key.public });
     // then
     expect(supportToken).toBeDefined();
     expect(supportToken).toEqual({
-      app: "excaliself",
+      app: "excalibee",
       amount: 1000,
       currency: "usd",
       timestamp: Temporal.Instant.fromEpochMilliseconds(1773490583 * 1000),
@@ -30,12 +30,12 @@ describe("SupportToken", async () => {
   });
 
   it("returns undefined for an invalid signature", () => {
-    const token = "v=1;t=1773490583;app=excaliself;amt=1000;cur=usd;s=aW52YWxpZA==";
+    const token = "v=1;t=1773490583;app=excalibee;amt=1000;cur=usd;s=aW52YWxpZA==";
     expect(SupportToken.verify({ hexToken: encode(token), publicKey: Key.public })).toBeUndefined();
   });
 
   it("returns undefined for a tampered payload", () => {
-    const token = sign("v=1;t=1773490583;app=excaliself;amt=1000;cur=usd");
+    const token = sign("v=1;t=1773490583;app=excalibee;amt=1000;cur=usd");
     const tampered = token.replace("amt=1000", "amt=9999");
     expect(SupportToken.verify({ hexToken: encode(tampered), publicKey: Key.public })).toBeUndefined();
   });

@@ -49,7 +49,7 @@ export namespace TestEnvironment {
         throw new Error(`Invalid working directory, package.json not found: ${packageJsonPath}`);
       }
       const { name } = await packageJsonFile.json();
-      if (name !== "excaliself") {
+      if (name !== "excalibee") {
         throw new Error(`Invalid working directory, invalid project name in package.json: ${name}`);
       }
       return cwd;
@@ -60,11 +60,11 @@ export namespace TestEnvironment {
     // but Bun is so fast it's not needed
     const unitTestRoot = join(cwd, "opt", "unit-test");
     const env = Env.initialize("UTC", {
-      EXCALISELF_STAGE: "dev",
-      EXCALISELF_TIMEZONE: "UTC",
-      EXCALISELF_ROOT: join(unitTestRoot, "excaliself"),
-      EXCALISELF_LOGGING: LogLevel.warn,
-      EXCALISELF_VERIFICATION_KEY:
+      EXCALIBEE_STAGE: "dev",
+      EXCALIBEE_TIMEZONE: "UTC",
+      EXCALIBEE_ROOT: join(unitTestRoot, "excalibee"),
+      EXCALIBEE_LOGGING: LogLevel.warn,
+      EXCALIBEE_VERIFICATION_KEY:
         "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAalpLQu9Fkn/R3WylORAad6UB0XAOowFIjF2/FwAyjpc=\n-----END PUBLIC KEY-----",
     });
     const patchEnvironmentVariables = (environment: Record<string, string>) => {
@@ -75,8 +75,8 @@ export namespace TestEnvironment {
     Logger.initialize(env);
 
     // Setup filesystem
-    await mkdir(dirname(env.EXCALISELF_DATABASE), { recursive: true });
-    await rm(env.EXCALISELF_DATABASE, { force: true });
+    await mkdir(dirname(env.EXCALIBEE_DATABASE), { recursive: true });
+    await rm(env.EXCALIBEE_DATABASE, { force: true });
 
     // Setup SQLite
     const sqlite = await Sqlite.initialize(env);

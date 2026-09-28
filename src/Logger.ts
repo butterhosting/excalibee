@@ -13,9 +13,9 @@ export class Logger {
     [LogLevel.error]: "❌",
   };
 
-  public static initialize(env: Pick<Env.Private, "EXCALISELF_TIMEZONE" | "EXCALISELF_LOGGING">) {
-    this.timeZone = env.EXCALISELF_TIMEZONE;
-    this.globalLogLevel = env.EXCALISELF_LOGGING;
+  public static initialize(env: Pick<Env.Private, "EXCALIBEE_TIMEZONE" | "EXCALIBEE_LOGGING">) {
+    this.timeZone = env.EXCALIBEE_TIMEZONE;
+    this.globalLogLevel = env.EXCALIBEE_LOGGING;
   }
 
   private readonly filename: string;

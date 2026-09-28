@@ -9,21 +9,21 @@ import { ExtractBetter } from "./types/ExtractBetter";
 
 export namespace Env {
   const Schema = z.object({
-    EXCALISELF_STAGE: z.enum(["dev", "e2e", "prod"]),
-    EXCALISELF_TIMEZONE: z.string().refine((tz) => TimeZone.check(tz), {
+    EXCALIBEE_STAGE: z.enum(["dev", "e2e", "prod"]),
+    EXCALIBEE_TIMEZONE: z.string().refine((tz) => TimeZone.check(tz), {
       error: "invalid_timezone",
     }),
 
-    EXCALISELF_ROOT: z.string(),
-    EXCALISELF_LOGGING: z.enum(LogLevel),
-    EXCALISELF_SUPPORT_TOKEN: z.string().optional(),
-    EXCALISELF_VERIFICATION_KEY: z.string().transform((str) => str.replaceAll("\\n", "\n")),
+    EXCALIBEE_ROOT: z.string(),
+    EXCALIBEE_LOGGING: z.enum(LogLevel),
+    EXCALIBEE_SUPPORT_TOKEN: z.string().optional(),
+    EXCALIBEE_VERIFICATION_KEY: z.string().transform((str) => str.replaceAll("\\n", "\n")),
   });
 
-  type Defaultable = ExtractBetter<keyof z.input<typeof Schema>, "EXCALISELF_TIMEZONE" | "EXCALISELF_LOGGING">;
+  type Defaultable = ExtractBetter<keyof z.input<typeof Schema>, "EXCALIBEE_TIMEZONE" | "EXCALIBEE_LOGGING">;
   const Defaults: Record<Defaultable, string> = {
-    EXCALISELF_TIMEZONE: "UTC",
-    EXCALISELF_LOGGING: "info",
+    EXCALIBEE_TIMEZONE: "UTC",
+    EXCALIBEE_LOGGING: "info",
   };
 
   export function initialize(timezone = Temporal.Now.timeZoneId() as "UTC", environment: Record<string, string | undefined> = Bun.env) {
@@ -31,18 +31,18 @@ export namespace Env {
       throw new Error(`Invalid timezone: ${timezone}`);
     }
     const { provided, merged } = withDefaults(environment);
-    return Schema.transform(({ EXCALISELF_ROOT, EXCALISELF_SUPPORT_TOKEN, EXCALISELF_VERIFICATION_KEY, ...env }) => ({
+    return Schema.transform(({ EXCALIBEE_ROOT, EXCALIBEE_SUPPORT_TOKEN, EXCALIBEE_VERIFICATION_KEY, ...env }) => ({
       ...env,
-      EXCALISELF_ROOT: isAbsolute(EXCALISELF_ROOT) ? EXCALISELF_ROOT : join(process.cwd(), EXCALISELF_ROOT),
-      EXCALISELF_SUPPORTER: Boolean(SupportToken.verify({ hexToken: EXCALISELF_SUPPORT_TOKEN, publicKey: EXCALISELF_VERIFICATION_KEY })),
+      EXCALIBEE_ROOT: isAbsolute(EXCALIBEE_ROOT) ? EXCALIBEE_ROOT : join(process.cwd(), EXCALIBEE_ROOT),
+      EXCALIBEE_SUPPORTER: Boolean(SupportToken.verify({ hexToken: EXCALIBEE_SUPPORT_TOKEN, publicKey: EXCALIBEE_VERIFICATION_KEY })),
     }))
       .transform((env) => ({
         ...env,
-        EXCALISELF_COMMIT: packageJson.commit.slice(0, 7),
-        EXCALISELF_VERSION: packageJson.version,
-        EXCALISELF_HTPASSWD: join(env.EXCALISELF_ROOT, ".htpasswd"),
-        EXCALISELF_DATABASE: join(env.EXCALISELF_ROOT, "data", "db.sqlite"),
-        EXCALISELF_PROVIDED: provided,
+        EXCALIBEE_COMMIT: packageJson.commit.slice(0, 7),
+        EXCALIBEE_VERSION: packageJson.version,
+        EXCALIBEE_HTPASSWD: join(env.EXCALIBEE_ROOT, ".htpasswd"),
+        EXCALIBEE_DATABASE: join(env.EXCALIBEE_ROOT, "data", "db.sqlite"),
+        EXCALIBEE_PROVIDED: provided,
       }))
       .parse(merged);
   }
@@ -50,21 +50,21 @@ export namespace Env {
     const { merged } = withDefaults(environment);
     return Schema.partial()
       .required({
-        EXCALISELF_TIMEZONE: true,
-        EXCALISELF_LOGGING: true,
+        EXCALIBEE_TIMEZONE: true,
+        EXCALIBEE_LOGGING: true,
       })
       .parse(merged);
   };
 
   export type Private = ReturnType<typeof initialize>;
-  export type Public = Readonly<Pick<Private, "EXCALISELF_STAGE" | "EXCALISELF_TIMEZONE" | "EXCALISELF_COMMIT" | "EXCALISELF_VERSION" | "EXCALISELF_SUPPORTER">>;
+  export type Public = Readonly<Pick<Private, "EXCALIBEE_STAGE" | "EXCALIBEE_TIMEZONE" | "EXCALIBEE_COMMIT" | "EXCALIBEE_VERSION" | "EXCALIBEE_SUPPORTER">>;
   export function onlyPublic(env: Private): Public {
     return {
-      EXCALISELF_STAGE: env.EXCALISELF_STAGE,
-      EXCALISELF_TIMEZONE: env.EXCALISELF_TIMEZONE,
-      EXCALISELF_COMMIT: env.EXCALISELF_COMMIT,
-      EXCALISELF_VERSION: env.EXCALISELF_VERSION,
-      EXCALISELF_SUPPORTER: env.EXCALISELF_SUPPORTER,
+      EXCALIBEE_STAGE: env.EXCALIBEE_STAGE,
+      EXCALIBEE_TIMEZONE: env.EXCALIBEE_TIMEZONE,
+      EXCALIBEE_COMMIT: env.EXCALIBEE_COMMIT,
+      EXCALIBEE_VERSION: env.EXCALIBEE_VERSION,
+      EXCALIBEE_SUPPORTER: env.EXCALIBEE_SUPPORTER,
     };
   }
 

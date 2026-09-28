@@ -3,7 +3,7 @@
   "configVersion": 1,
   "workspaces": {
     "": {
-      "name": "excaliself",
+      "name": "excalibee",
       "dependencies": {
         "@excalidraw/excalidraw": "^0.18.1",
         "@js-temporal/polyfill": "^0.5.1",

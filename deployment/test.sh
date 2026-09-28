@@ -68,7 +68,7 @@ run_scenario() {
     name="$1"
     compose_file="$2"
     verify_fn="$3"
-    project="excaliself-test-${name}"
+    project="excalibee-test-${name}"
     active_project="$project"
     active_compose="$compose_file"
 
@@ -78,9 +78,9 @@ run_scenario() {
 
     elapsed=0
     while [ "$elapsed" -lt "$TIMEOUT" ]; do
-        logs=$(docker compose -p "$project" -f "$compose_file" logs excaliself 2>&1)
+        logs=$(docker compose -p "$project" -f "$compose_file" logs excalibee 2>&1)
 
-        if printf "%s" "$logs" | grep -q "Excaliself started"; then
+        if printf "%s" "$logs" | grep -q "Excalibee started"; then
             printf "%s\n" "$logs"
 
             if $verify_fn; then
@@ -95,7 +95,7 @@ run_scenario() {
             return 0
         fi
 
-        if ! docker compose -p "$project" -f "$compose_file" ps --status running 2>/dev/null | grep -q excaliself; then
+        if ! docker compose -p "$project" -f "$compose_file" ps --status running 2>/dev/null | grep -q excalibee; then
             printf "%s\n" "$logs"
             printf "  FAIL  %s (container exited)\n" "$name"
             failed=$((failed + 1))
@@ -107,7 +107,7 @@ run_scenario() {
         elapsed=$((elapsed + 1))
     done
 
-    docker compose -p "$project" -f "$compose_file" logs excaliself 2>&1
+    docker compose -p "$project" -f "$compose_file" logs excalibee 2>&1
     printf "  FAIL  %s (timeout after %ds)\n" "$name" "$TIMEOUT"
     failed=$((failed + 1))
     teardown

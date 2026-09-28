@@ -8,7 +8,7 @@ test.beforeEach(async ({ page }) => {
 
 test("the library loads empty and has the right title", async ({ page }) => {
   // then
-  await expect(page).toHaveTitle("Library | Excaliself");
+  await expect(page).toHaveTitle("Library | Excalibee");
   await expect(page.getByTestId("library-title")).toHaveText("Library");
   await expect(page.getByTestId("library-count")).toHaveText("No drawings yet");
   await expect(page.getByTestId("empty")).toBeVisible();

@@ -1,10 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 46 200 90">
-  <!-- the Excaliself mark without its underline: three tiles on a grey step read better than the full lockup at 16px -->
-  <rect x="13" y="81" width="50" height="44" rx="10" fill="#5f5f68"/>
-  <rect x="82" y="61" width="50" height="44" rx="10" fill="#5f5f68"/>
-  <rect x="151" y="81" width="50" height="44" rx="10" fill="#5f5f68"/>
-  <rect x="6" y="74" width="50" height="44" rx="10" fill="#74dfa2" stroke="#1e1e24" stroke-width="8"/>
-  <rect x="75" y="54" width="50" height="44" rx="10" fill="#74dfa2" stroke="#1e1e24" stroke-width="8"/>
-  <rect x="144" y="74" width="50" height="44" rx="10" fill="#74dfa2" stroke="#1e1e24" stroke-width="8"/>
-  <path d="M56 96 C 66 96, 66 76, 75 76 M125 76 C 134 76, 134 96, 144 96" fill="none" stroke="#1e1e24" stroke-width="8" stroke-linecap="round"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="92 -4 108 100">
+  <!-- the Excalibee mark without its flight trail: the bee alone reads better at 16px -->
+  <ellipse cx="151" cy="69" rx="36" ry="25" fill="#5f5f68"/>
+  <ellipse cx="129" cy="21.5" rx="15" ry="15.5" fill="#ffffff" stroke="#1e1e24" stroke-width="6" transform="rotate(-28 129 21.5)"/>
+  <ellipse cx="154.5" cy="18.5" rx="14.5" ry="15.5" fill="#ffffff" stroke="#1e1e24" stroke-width="6" transform="rotate(-12 154.5 18.5)"/>
+  <ellipse cx="144" cy="62" rx="36" ry="25" fill="#74dfa2" stroke="#1e1e24" stroke-width="8"/>
+  <circle cx="178" cy="62" r="16" fill="#1e1e24"/>
+  <path d="M0 14 C 2.5 4, 10 1, 14 0" transform="translate(181 32)" fill="none" stroke="#1e1e24" stroke-width="5" stroke-linecap="round"/>
+  <path d="M0 6 L14 0 L14 12 Z" transform="translate(96 56)" fill="#1e1e24"/>
 </svg>

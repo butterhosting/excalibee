@@ -5,9 +5,9 @@ import { Env } from "./Env";
 
 describe("Env", () => {
   const REQUIRED = {
-    EXCALISELF_STAGE: "dev",
-    EXCALISELF_ROOT: "/opt/excaliself",
-    EXCALISELF_VERIFICATION_KEY: "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAalpLQu9Fkn/R3WylORAad6UB0XAOowFIjF2/FwAyjpc=\n-----END PUBLIC KEY-----",
+    EXCALIBEE_STAGE: "dev",
+    EXCALIBEE_ROOT: "/opt/excalibee",
+    EXCALIBEE_VERIFICATION_KEY: "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAalpLQu9Fkn/R3WylORAad6UB0XAOowFIjF2/FwAyjpc=\n-----END PUBLIC KEY-----",
   };
 
   beforeEach(async () => {
@@ -16,17 +16,17 @@ describe("Env", () => {
 
   it("should fall back to a default for what is unset or empty, and remember what was provided", () => {
     // given
-    const env = Env.initialize("UTC", { ...REQUIRED, EXCALISELF_LOGGING: "debug", EXCALISELF_TIMEZONE: "" });
+    const env = Env.initialize("UTC", { ...REQUIRED, EXCALIBEE_LOGGING: "debug", EXCALIBEE_TIMEZONE: "" });
     // then
-    expect(env.EXCALISELF_LOGGING).toEqual(LogLevel.debug);
-    expect(env.EXCALISELF_TIMEZONE).toEqual("UTC");
-    expect(env.EXCALISELF_PROVIDED).toEqual({ EXCALISELF_LOGGING: "debug" });
+    expect(env.EXCALIBEE_LOGGING).toEqual(LogLevel.debug);
+    expect(env.EXCALIBEE_TIMEZONE).toEqual("UTC");
+    expect(env.EXCALIBEE_PROVIDED).toEqual({ EXCALIBEE_LOGGING: "debug" });
   });
 
   it("should expose only the public keys", () => {
     // given
     const env = Env.initialize("UTC", REQUIRED);
     // then
-    expect(Object.keys(Env.onlyPublic(env)).sort()).toEqual(["EXCALISELF_COMMIT", "EXCALISELF_STAGE", "EXCALISELF_SUPPORTER", "EXCALISELF_TIMEZONE", "EXCALISELF_VERSION"]);
+    expect(Object.keys(Env.onlyPublic(env)).sort()).toEqual(["EXCALIBEE_COMMIT", "EXCALIBEE_STAGE", "EXCALIBEE_SUPPORTER", "EXCALIBEE_TIMEZONE", "EXCALIBEE_VERSION"]);
   });
 });

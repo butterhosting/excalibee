@@ -22,11 +22,11 @@ export class ClientRegistry {
 
   private static printEnv(env: Env.Public) {
     const envCopy: Env.Public = {
-      EXCALISELF_STAGE: env.EXCALISELF_STAGE,
-      EXCALISELF_VERSION: env.EXCALISELF_VERSION,
-      EXCALISELF_COMMIT: env.EXCALISELF_COMMIT,
-      EXCALISELF_TIMEZONE: env.EXCALISELF_TIMEZONE,
-      EXCALISELF_SUPPORTER: env.EXCALISELF_SUPPORTER,
+      EXCALIBEE_STAGE: env.EXCALIBEE_STAGE,
+      EXCALIBEE_VERSION: env.EXCALIBEE_VERSION,
+      EXCALIBEE_COMMIT: env.EXCALIBEE_COMMIT,
+      EXCALIBEE_TIMEZONE: env.EXCALIBEE_TIMEZONE,
+      EXCALIBEE_SUPPORTER: env.EXCALIBEE_SUPPORTER,
     };
     const longestKey = Object.keys(envCopy)
       .map((k) => k.length)
@@ -35,7 +35,7 @@ export class ClientRegistry {
     Object.entries(envCopy).forEach(([key, value]) => {
       result += `${key.padEnd(longestKey + 1)}: ${value}\n`;
     });
-    console.info("%cExcaliself\n\n%c%s", "font-size: 24px; font-weight: 800;", "font-size: 12px; font-weight: normal", result);
+    console.info("%cExcalibee\n\n%c%s", "font-size: 24px; font-weight: 800;", "font-size: 12px; font-weight: normal", result);
   }
 
   private readonly registry: Record<string, any> = {};

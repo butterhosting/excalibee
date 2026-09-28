@@ -36,7 +36,7 @@ export function libraryPage() {
   const allDrawings = drawings.data ?? [];
 
   const current = folderId ? allFolders.find((f) => f.id === folderId) : undefined;
-  useDocumentTitle(`${current ? current.name : "Library"} | Excaliself`);
+  useDocumentTitle(`${current ? current.name : "Library"} | Excalibee`);
 
   const crumbs = useMemo(() => {
     const chain: Folder[] = [];
@@ -133,20 +133,46 @@ export function libraryPage() {
 
   const actions = (
     <>
-      <Button variant="outline" onClick={newFolder} data-testid="new-folder">
-        <Icon.Folder className="h-4 text-c-dark-full" />
-        New folder
-      </Button>
       <Button onClick={newDrawing} data-testid="new-drawing">
         <Icon.Plus className="size-4" />
         New drawing
       </Button>
+      <Button variant="outline" onClick={newFolder} data-testid="new-folder">
+        <Icon.Folder className="h-4 text-c-dark-full" />
+        New folder
+      </Button>
+    </>
+  );
+  const tools = (
+    <>
+      <label className="relative">
+        <Icon.Search className="size-4 text-c-dark-half absolute left-3.5 top-1/2 -translate-y-1/2" />
+        <input
+          type="search"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Search drawings…"
+          data-testid="search"
+          className="h-10 w-80 pl-10 pr-3 rounded-[10px] bg-white border border-c-line text-sm focus:outline-none focus:border-c-accent-dark"
+        />
+      </label>
+      <label className="relative">
+        <select
+          value={sort}
+          onChange={(e) => setSort(e.target.value as Sort)}
+          className="h-10 pl-3.5 pr-9 rounded-[10px] bg-white border border-c-line text-sm appearance-none cursor-pointer focus:outline-none focus:border-c-accent-dark"
+        >
+          <option value="recent">Recent</option>
+          <option value="name">Name</option>
+        </select>
+        <Icon.ChevronDown className="size-4 text-c-dark-half absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+      </label>
     </>
   );
 
   if (folderId && folders.data && !current) {
     return (
-      <Frame actions={actions}>
+      <Frame actions={actions} tools={tools}>
         <div className="py-24 text-center flex flex-col items-center gap-3">
           <span className="text-lg font-semibold">This folder does not exist</span>
           <Link to={Route.library()} className="text-c-accent-dark font-semibold hover:underline">
@@ -158,57 +184,31 @@ export function libraryPage() {
   }
 
   return (
-    <Frame actions={actions}>
-      <div className="flex items-end justify-between gap-6">
-        <div className="flex flex-col gap-1.5">
-          <h1 className="text-[26px] font-bold tracking-tight leading-tight flex items-center gap-2.5">
-            {current && (
-              <nav className="contents" data-testid="breadcrumb">
-                <Internal.Crumb to={Route.library()} zone={dropZone(undefined)}>
-                  Library
-                </Internal.Crumb>
-                <span className="text-c-dark-half/50 font-medium">/</span>
-                {crumbs.map((crumb) => (
-                  <span key={crumb.id} className="contents">
-                    <Internal.Crumb to={Route.library(crumb.id)} zone={dropZone(crumb.id)}>
-                      {crumb.name}
-                    </Internal.Crumb>
-                    <span className="text-c-dark-half/50 font-medium">/</span>
-                  </span>
-                ))}
-              </nav>
-            )}
-            {current && <Icon.Folder className="h-6 text-c-dark-full shrink-0" />}
-            <span data-testid="library-title">{current ? current.name : "Library"}</span>
-          </h1>
-          <span className="text-sm text-c-dark-half" data-testid="library-count">
-            {searching ? `${shownDrawings.length} ${shownDrawings.length === 1 ? "drawing" : "drawings"} match, across all folders` : Internal.countLabel(inside)}
-          </span>
-        </div>
-        <div className="flex items-center gap-3">
-          <label className="relative">
-            <Icon.Search className="size-4 text-c-dark-half absolute left-3.5 top-1/2 -translate-y-1/2" />
-            <input
-              type="search"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder={current ? `Search in all drawings…` : "Search drawings…"}
-              data-testid="search"
-              className="h-10 w-80 pl-10 pr-3 rounded-[10px] bg-white border border-c-line text-sm focus:outline-none focus:border-c-accent-dark"
-            />
-          </label>
-          <label className="relative">
-            <select
-              value={sort}
-              onChange={(e) => setSort(e.target.value as Sort)}
-              className="h-10 pl-3.5 pr-9 rounded-[10px] bg-white border border-c-line text-sm appearance-none cursor-pointer focus:outline-none focus:border-c-accent-dark"
-            >
-              <option value="recent">Recent</option>
-              <option value="name">Name</option>
-            </select>
-            <Icon.ChevronDown className="size-4 text-c-dark-half absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
-          </label>
-        </div>
+    <Frame actions={actions} tools={tools}>
+      <div className="flex flex-col gap-1.5">
+        <h1 className="text-[26px] font-bold tracking-tight leading-tight flex items-center gap-2.5">
+          {current && (
+            <nav className="contents" data-testid="breadcrumb">
+              <Internal.Crumb to={Route.library()} zone={dropZone(undefined)}>
+                Library
+              </Internal.Crumb>
+              <span className="text-c-dark-half/50 font-medium">/</span>
+              {crumbs.map((crumb) => (
+                <span key={crumb.id} className="contents">
+                  <Internal.Crumb to={Route.library(crumb.id)} zone={dropZone(crumb.id)}>
+                    {crumb.name}
+                  </Internal.Crumb>
+                  <span className="text-c-dark-half/50 font-medium">/</span>
+                </span>
+              ))}
+            </nav>
+          )}
+          {current && <Icon.Folder className="h-6 text-c-dark-full shrink-0" />}
+          <span data-testid="library-title">{current ? current.name : "Library"}</span>
+        </h1>
+        <span className="text-sm text-c-dark-half" data-testid="library-count">
+          {searching ? `${shownDrawings.length} ${shownDrawings.length === 1 ? "drawing" : "drawings"} match, across all folders` : Internal.countLabel(inside)}
+        </span>
       </div>
 
       {notice && (

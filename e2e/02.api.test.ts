@@ -19,10 +19,10 @@ test("the drawings api stores the scene, indexes its text and serves the thumbna
   expect((await page.request.get(`/internal-api/drawings/${drawing.id}/thumbnail`)).status()).toEqual(404);
 
   // when
-  const scene = { elements: [{ id: "t1", type: "text", text: "Excaliself API", isDeleted: false }], appState: { zoom: { value: 1 } }, files: {} };
+  const scene = { elements: [{ id: "t1", type: "text", text: "Excalibee API", isDeleted: false }], appState: { zoom: { value: 1 } }, files: {} };
   const saved = await page.request.put(`/internal-api/drawings/${drawing.id}/scene`, { data: { scene, thumbnail: PNG } });
   // then
-  expect(await saved.json()).toEqual(expect.objectContaining({ id: drawing.id, searchText: "Excaliself API", updated: expect.any(String) }));
+  expect(await saved.json()).toEqual(expect.objectContaining({ id: drawing.id, searchText: "Excalibee API", updated: expect.any(String) }));
   expect(await (await page.request.get(`/internal-api/drawings/${drawing.id}/scene`)).json()).toEqual(scene);
   const thumbnail = await page.request.get(`/internal-api/drawings/${drawing.id}/thumbnail`);
   expect(thumbnail.status()).toEqual(200);

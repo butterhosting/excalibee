@@ -7,7 +7,7 @@ if [ "$(id -u)" -ne 0 ]; then
 fi
 
 # the operator's value wins over the file, as it does for the app
-root="${EXCALISELF_ROOT:-$(grep '^EXCALISELF_ROOT=' ".env.${STAGE}" | cut -d= -f2-)}"
+root="${EXCALIBEE_ROOT:-$(grep '^EXCALIBEE_ROOT=' ".env.${STAGE}" | cut -d= -f2-)}"
 mkdir -p "$root"
 # a read-only mount inside the root (an .htpasswd, say) cannot be chowned, and does not need to be
 chown -R bun:bun "$root" 2>/dev/null || true

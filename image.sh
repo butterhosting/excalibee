@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-IMAGE="butterhosting/excaliself"
+IMAGE="butterhosting/excalibee"
 PLATFORMS="linux/amd64,linux/arm64"
 
 usage() {

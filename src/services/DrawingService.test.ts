@@ -102,7 +102,7 @@ describe(DrawingService.name, () => {
     it("should store the scene, decode the thumbnail and derive the search text", async () => {
       // given
       const existing = TestFixture.drawing();
-      const scene = TestFixture.scene("Browser", "  ", "Excaliself API");
+      const scene = TestFixture.scene("Browser", "  ", "Excalibee API");
       context.drawingRepositoryMock.updateContent.mockImplementation(async (drawingId, update) => ({ drawingId, ...update }) as DrawingContent);
       context.drawingRepositoryMock.update.mockImplementation(async (_id, update) => ({ ...existing, ...update }));
 
@@ -112,7 +112,7 @@ describe(DrawingService.name, () => {
       const [, content] = context.drawingRepositoryMock.updateContent.mock.calls[0]!;
       expect(content.scene).toEqual(scene);
       expect(content.thumbnail).toEqual(TestFixture.PNG);
-      expect(drawing.searchText).toEqual("Browser\nExcaliself API");
+      expect(drawing.searchText).toEqual("Browser\nExcalibee API");
       expect(drawing.updated).toBeDefined();
     });
 

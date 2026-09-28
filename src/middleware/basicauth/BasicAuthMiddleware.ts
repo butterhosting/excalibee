@@ -19,7 +19,7 @@ export class BasicAuthMiddleware implements MiddlewareHandler {
 
   @Initialize
   public async initializeFromDisk() {
-    const htpasswd = Bun.file(this.env.EXCALISELF_HTPASSWD);
+    const htpasswd = Bun.file(this.env.EXCALIBEE_HTPASSWD);
     if (await htpasswd.exists()) {
       const content = await htpasswd.text();
       this.enabled = true;

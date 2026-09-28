@@ -1,6 +1,6 @@
 services:
   application:
-    image: butterhosting/excaliself:latest
+    image: butterhosting/excalibee:latest
     user: "${HOST_UID:-1000}:${HOST_GID:-1000}"
     volumes:
       - ./opt:/app/opt

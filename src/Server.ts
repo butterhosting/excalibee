@@ -38,7 +38,7 @@ export class Server {
   @Initialize
   public listen() {
     const server = Bun.serve({
-      development: this.env.EXCALISELF_STAGE === "dev",
+      development: this.env.EXCALIBEE_STAGE === "dev",
       fetch: this.handleFetch(() => {
         return Response.json(ServerError.route_not_found().problemDetails(), { status: 404 });
       }),
@@ -154,7 +154,7 @@ export class Server {
          */
         "/internal-api/restricted/purge": {
           POST: this.handleRoute(async () => {
-            if (this.env.EXCALISELF_STAGE !== "prod") {
+            if (this.env.EXCALIBEE_STAGE !== "prod") {
               await this.restrictedService.purge();
               return new Response();
             }
@@ -173,26 +173,26 @@ export class Server {
     console.log(
       [
         "",
-        `  🚀 \x1b[1mExcaliself started on ${Temporal.Now.plainDateTimeISO(this.env.EXCALISELF_TIMEZONE)
+        `  🚀 \x1b[1mExcalibee started on ${Temporal.Now.plainDateTimeISO(this.env.EXCALIBEE_TIMEZONE)
           .toString({ smallestUnit: "second" })
-          .replace("T", " ")} (${this.env.EXCALISELF_TIMEZONE})\x1b[0m`,
+          .replace("T", " ")} (${this.env.EXCALIBEE_TIMEZONE})\x1b[0m`,
         "",
         `  \x1b[1mServer\x1b[0m    ${server.url}`,
         "",
-        `  \x1b[1mStage\x1b[0m     ${this.env.EXCALISELF_STAGE}`,
-        `  \x1b[1mCommit\x1b[0m    ${this.env.EXCALISELF_COMMIT}`,
-        `  \x1b[1mVersion\x1b[0m   ${this.env.EXCALISELF_VERSION}`,
+        `  \x1b[1mStage\x1b[0m     ${this.env.EXCALIBEE_STAGE}`,
+        `  \x1b[1mCommit\x1b[0m    ${this.env.EXCALIBEE_COMMIT}`,
+        `  \x1b[1mVersion\x1b[0m   ${this.env.EXCALIBEE_VERSION}`,
         "",
-        `  \x1b[1mLogging\x1b[0m   ${this.env.EXCALISELF_LOGGING}`,
-        `  \x1b[1mTimezone\x1b[0m  ${this.env.EXCALISELF_TIMEZONE}`,
+        `  \x1b[1mLogging\x1b[0m   ${this.env.EXCALIBEE_LOGGING}`,
+        `  \x1b[1mTimezone\x1b[0m  ${this.env.EXCALIBEE_TIMEZONE}`,
         "",
-        ...(this.env.EXCALISELF_SUPPORTER
+        ...(this.env.EXCALIBEE_SUPPORTER
           ? [
               `  \x1b[1mMode\x1b[0m      Running with love ❤️`, //
             ]
           : [
               `  \x1b[1mMode\x1b[0m      Running normally`, //
-              `            https://butterhost.ing/excaliself/love`, //
+              `            https://butterhost.ing/excalibee/love`, //
             ]),
         "",
       ].join("\n"),
