@@ -3,6 +3,7 @@ import { dirname } from "path";
 import { Sqlite } from "./drizzle/sqlite";
 import { Env } from "./Env";
 import { Logger } from "./Logger";
+import { Server } from "./Server";
 import { ServerRegistry } from "./ServerRegistry";
 
 /**
@@ -28,4 +29,12 @@ const sqlite = await Sqlite.initialize(env);
 /**
  * Bootstrap
  */
-await ServerRegistry.bootstrap(env, sqlite);
+const registry = await ServerRegistry.bootstrap(env, sqlite);
+
+for (const signal of ["SIGTERM", "SIGINT"] as const) {
+  process.once(signal, async () => {
+    await registry.get(Server).stop();
+    sqlite.close();
+    process.exit(0);
+  });
+}

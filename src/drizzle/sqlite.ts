@@ -17,6 +17,13 @@ export namespace Sqlite {
       migrationsFolder: "src/drizzle/migrations",
     });
     sqlite.run("PRAGMA foreign_keys = ON");
+    // In the default rollback journal, readers and writers block each other; WAL lets them run side by side, and lets
+    // an online backup (`sqlite3 .backup`) run without stalling the app. `NORMAL` skips the per-commit fsync: a crash
+    // can cost the last commits, never the database. A writer that finds the database locked waits up to 5 s instead
+    // of failing at once.
+    sqlite.run("PRAGMA journal_mode = WAL");
+    sqlite.run("PRAGMA synchronous = NORMAL");
+    sqlite.run("PRAGMA busy_timeout = 5000");
     return Object.assign(sqlite, {
       close: () => database.close(),
     });

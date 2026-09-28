@@ -76,7 +76,9 @@ export namespace TestEnvironment {
 
     // Setup filesystem
     await mkdir(dirname(env.EXCALIBEE_DATABASE), { recursive: true });
-    await rm(env.EXCALIBEE_DATABASE, { force: true });
+    await Promise.all(
+      [`${env.EXCALIBEE_DATABASE}`, `${env.EXCALIBEE_DATABASE}-wal`, `${env.EXCALIBEE_DATABASE}-shm`].map((file) => rm(file, { force: true })),
+    );
 
     // Setup SQLite
     const sqlite = await Sqlite.initialize(env);
