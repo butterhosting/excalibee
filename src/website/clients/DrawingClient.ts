@@ -40,6 +40,18 @@ export class DrawingClient {
     return Drawing.parse(json);
   }
 
+  public saveSceneOnExit(id: string, data: DrawingClient.SaveScene): boolean {
+    const body = JSON.stringify(data);
+    if (new TextEncoder().encode(body).length > DrawingClient.KEEPALIVE_LIMIT_BYTES) return false;
+    fetch(`/internal-api/drawings/${id}/scene`, {
+      method: "PUT",
+      headers: { "content-type": "application/json" },
+      body,
+      keepalive: true,
+    }).catch(() => {});
+    return true;
+  }
+
   /**
    * Keyed on the last update so that the browser cache turns over exactly when the thumbnail does
    */
@@ -49,6 +61,7 @@ export class DrawingClient {
 }
 
 export namespace DrawingClient {
+  export const KEEPALIVE_LIMIT_BYTES = 64 * 1024;
   export type Create = { name: string; folderId?: string };
   export type Update = { name?: string; folderId?: string | null };
   export type SaveScene = { scene: DrawingScene; thumbnail?: string | null };

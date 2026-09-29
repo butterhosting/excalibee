@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { AppBoundary } from "./boundaries/AppBoundary";
+import { EditorFlow } from "./flows/EditorFlow";
 import { LibraryFlow } from "./flows/LibraryFlow";
 
 test.beforeEach(async ({ page }) => {
@@ -44,15 +45,8 @@ test("a drawing is created, opened in the editor, autosaved and shown with a thu
   await expect(page.getByTestId("drawing-title")).toContainText("Architecture");
   await expect(page.getByTestId("save-status")).toContainText("Saved");
 
-  // when (draw a rectangle: focus the canvas, pick the tool and drag)
-  const canvas = page.locator(".excalidraw__canvas.interactive");
-  const box = (await canvas.boundingBox())!;
-  await canvas.click({ position: { x: 100, y: 100 } });
-  await page.keyboard.press("2");
-  await page.mouse.move(box.x + 300, box.y + 300);
-  await page.mouse.down();
-  await page.mouse.move(box.x + 500, box.y + 420, { steps: 5 });
-  await page.mouse.up();
+  // when
+  await EditorFlow.drawRectangle(page, 300, 300);
   // then (the debounced autosave kicks in)
   await expect(page.getByTestId("save-status")).toContainText("Unsaved");
   await expect(page.getByTestId("save-status")).toContainText("Saved", { timeout: 8_000 });

@@ -4,7 +4,7 @@ import { Folder } from "@/models/Folder";
 import { Excalidraw, exportToBlob, getSceneVersion, MainMenu } from "@excalidraw/excalidraw";
 import type { ExcalidrawImperativeAPI, ExcalidrawInitialDataState } from "@excalidraw/excalidraw/types";
 import clsx from "clsx";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router";
 import { useYesQuery } from "react-yesquery";
 import { DialogClient } from "../clients/DialogClient";
@@ -90,6 +90,8 @@ namespace Internal {
     const api = useRef<ExcalidrawImperativeAPI>(null);
     const savedVersion = useRef<string>(undefined);
     const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
+    const queue = useRef<Promise<void>>(Promise.resolve());
+    const unmounted = useRef(false);
     useDocumentTitle(`${drawing.name} | Excalibee`);
 
     const path = (() => {
@@ -103,25 +105,27 @@ namespace Internal {
     })();
 
     const versionOf = (a: ExcalidrawImperativeAPI) => `${getSceneVersion(a.getSceneElements())}:${Object.keys(a.getFiles()).length}`;
+    const isDirty = (a: ExcalidrawImperativeAPI) => savedVersion.current !== undefined && versionOf(a) !== savedVersion.current;
 
-    const save = async () => {
-      const a = api.current;
-      if (!a) return;
-      clearTimeout(timer.current);
-      const version = versionOf(a);
-      const elements = a.getSceneElements();
+    // everything is read from the API synchronously: Excalidraw empties its scene on unmount, so a save that reads it after
+    // an await, or a timer that fires after leaving the editor, would store a blank drawing
+    const snapshotOf = (a: ExcalidrawImperativeAPI) => {
       const appState = a.getAppState();
       const persisted: Record<string, unknown> = {};
       PERSISTED_APP_STATE.forEach((key) => (persisted[key] = appState[key]));
+      return { version: versionOf(a), elements: a.getSceneElements(), appState, persisted, files: a.getFiles() };
+    };
+
+    const persist = async ({ version, elements, appState, persisted, files }: ReturnType<typeof snapshotOf>) => {
       try {
-        setStatus("saving");
+        if (!unmounted.current) setStatus("saving");
         // an emptied canvas clears the thumbnail
         const thumbnail = elements.length
           ? await blobToBase64(
               await exportToBlob({
                 elements,
                 appState: { ...appState, exportBackground: true, exportWithDarkMode: false },
-                files: a.getFiles(),
+                files,
                 mimeType: "image/png",
                 getDimensions: (w: number, h: number) => {
                   const scale = Math.min(1, THUMBNAIL_MAX_PX / Math.max(w, h));
@@ -130,21 +134,26 @@ namespace Internal {
               }),
             )
           : null;
-        const updated = await drawingClient.saveScene(drawing.id, {
-          scene: {
-            elements: elements as unknown as Record<string, unknown>[],
-            appState: persisted,
-            files: a.getFiles() as Record<string, unknown>,
-          },
-          thumbnail,
-        });
+        const scene = { elements: elements as unknown as Record<string, unknown>[], appState: persisted, files: files as Record<string, unknown> };
+        const updated = await drawingClient.saveScene(drawing.id, { scene, thumbnail });
         savedVersion.current = version;
+        if (unmounted.current) return;
         setDrawing((d) => ({ ...d, updated: updated.updated }));
-        setStatus(versionOf(a) === version ? "saved" : "unsaved");
+        setStatus(api.current && versionOf(api.current) === version ? "saved" : "unsaved");
       } catch {
+        if (unmounted.current) return;
         setStatus("failed");
         timer.current = setTimeout(save, RETRY_DELAY_MS);
       }
+    };
+
+    const save = () => {
+      const a = api.current;
+      if (!a) return;
+      clearTimeout(timer.current);
+      const snapshot = snapshotOf(a);
+      // chained, so that a flush on leaving the editor cannot overtake the autosave that is still in flight
+      queue.current = queue.current.then(() => persist(snapshot));
     };
 
     const onChange = () => {
@@ -168,8 +177,14 @@ namespace Internal {
           save();
         }
       };
+      // a real unload (reload, closing the tab, leaving the app) cannot wait for a thumbnail; the scene alone goes out as a
+      // keepalive request, and the browser's "leave site?" prompt is kept for the scenes too large for one
       const onUnload = (e: BeforeUnloadEvent) => {
-        if (status !== "saved") e.preventDefault();
+        const a = api.current;
+        if (!a || !isDirty(a)) return;
+        const { elements, persisted, files } = snapshotOf(a);
+        const scene = { elements: elements as unknown as Record<string, unknown>[], appState: persisted, files: files as Record<string, unknown> };
+        if (!drawingClient.saveSceneOnExit(drawing.id, { scene })) e.preventDefault();
       };
       window.addEventListener("keydown", onKey);
       window.addEventListener("beforeunload", onUnload);
@@ -177,7 +192,18 @@ namespace Internal {
         window.removeEventListener("keydown", onKey);
         window.removeEventListener("beforeunload", onUnload);
       };
-    }, [status]);
+    }, []);
+
+    // leaving the editor inside the app (the Library link, the browser's back button) unloads nothing, it only unmounts;
+    // a layout effect cleans up before Excalidraw's own `componentWillUnmount` empties the scene, so it can still be read
+    useLayoutEffect(() => {
+      unmounted.current = false;
+      return () => {
+        unmounted.current = true;
+        clearTimeout(timer.current);
+        if (api.current && isDirty(api.current)) save();
+      };
+    }, []);
 
     async function rename() {
       const result = await dialogClient.drawingRename(drawing);
