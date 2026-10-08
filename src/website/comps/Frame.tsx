@@ -1,6 +1,5 @@
 import clsx from "clsx";
 import { ReactNode } from "react";
-import { useRegistry } from "../hooks/useRegistry";
 import { Logo } from "./Logo";
 
 type Props = {
@@ -33,11 +32,10 @@ namespace Internal {
   }
 
   export function Footer() {
-    const { EXCALIBEE_SUPPORTER } = useRegistry("env");
     return (
       <footer className="w-full max-w-360 mx-auto px-10">
         <div className="py-10 flex justify-center">
-          <Logo.Lockup supporter={EXCALIBEE_SUPPORTER} />
+          <Logo.Lockup />
         </div>
       </footer>
     );

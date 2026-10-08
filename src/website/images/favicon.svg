@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="92 -4 108 100">
-  <!-- the Excalibee mark without its flight trail: the bee alone reads better at 16px -->
+  <!-- the Excalibee bee, same crop as Logo.Mark but with bolder strokes so it reads at 16px -->
   <ellipse cx="151" cy="69" rx="36" ry="25" fill="#5f5f68"/>
   <ellipse cx="129" cy="21.5" rx="15" ry="15.5" fill="#ffffff" stroke="#1e1e24" stroke-width="6" transform="rotate(-28 129 21.5)"/>
   <ellipse cx="154.5" cy="18.5" rx="14.5" ry="15.5" fill="#ffffff" stroke="#1e1e24" stroke-width="6" transform="rotate(-12 154.5 18.5)"/>

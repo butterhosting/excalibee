@@ -4,7 +4,6 @@ import { z } from "zod/v4";
 import packageJson from "../package.json";
 import { TimeZone } from "./helpers/TimeZone";
 import { LogLevel } from "./models/internal/LogLevel";
-import { SupportToken } from "./support/SupportToken";
 import { ExtractBetter } from "./types/ExtractBetter";
 
 export namespace Env {
@@ -16,8 +15,6 @@ export namespace Env {
 
     EXCALIBEE_ROOT: z.string(),
     EXCALIBEE_LOGGING: z.enum(LogLevel),
-    EXCALIBEE_SUPPORT_TOKEN: z.string().optional(),
-    EXCALIBEE_VERIFICATION_KEY: z.string().transform((str) => str.replaceAll("\\n", "\n")),
   });
 
   type Defaultable = ExtractBetter<keyof z.input<typeof Schema>, "EXCALIBEE_TIMEZONE" | "EXCALIBEE_LOGGING">;
@@ -31,10 +28,9 @@ export namespace Env {
       throw new Error(`Invalid timezone: ${timezone}`);
     }
     const { provided, merged } = withDefaults(environment);
-    return Schema.transform(({ EXCALIBEE_ROOT, EXCALIBEE_SUPPORT_TOKEN, EXCALIBEE_VERIFICATION_KEY, ...env }) => ({
+    return Schema.transform(({ EXCALIBEE_ROOT, ...env }) => ({
       ...env,
       EXCALIBEE_ROOT: isAbsolute(EXCALIBEE_ROOT) ? EXCALIBEE_ROOT : join(process.cwd(), EXCALIBEE_ROOT),
-      EXCALIBEE_SUPPORTER: Boolean(SupportToken.verify({ hexToken: EXCALIBEE_SUPPORT_TOKEN, publicKey: EXCALIBEE_VERIFICATION_KEY })),
     }))
       .transform((env) => ({
         ...env,
@@ -57,14 +53,13 @@ export namespace Env {
   };
 
   export type Private = ReturnType<typeof initialize>;
-  export type Public = Readonly<Pick<Private, "EXCALIBEE_STAGE" | "EXCALIBEE_TIMEZONE" | "EXCALIBEE_COMMIT" | "EXCALIBEE_VERSION" | "EXCALIBEE_SUPPORTER">>;
+  export type Public = Readonly<Pick<Private, "EXCALIBEE_STAGE" | "EXCALIBEE_TIMEZONE" | "EXCALIBEE_COMMIT" | "EXCALIBEE_VERSION">>;
   export function onlyPublic(env: Private): Public {
     return {
       EXCALIBEE_STAGE: env.EXCALIBEE_STAGE,
       EXCALIBEE_TIMEZONE: env.EXCALIBEE_TIMEZONE,
       EXCALIBEE_COMMIT: env.EXCALIBEE_COMMIT,
       EXCALIBEE_VERSION: env.EXCALIBEE_VERSION,
-      EXCALIBEE_SUPPORTER: env.EXCALIBEE_SUPPORTER,
     };
   }
 

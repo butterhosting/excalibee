@@ -64,8 +64,6 @@ export namespace TestEnvironment {
       EXCALIBEE_TIMEZONE: "UTC",
       EXCALIBEE_ROOT: join(unitTestRoot, "excalibee"),
       EXCALIBEE_LOGGING: LogLevel.warn,
-      EXCALIBEE_VERIFICATION_KEY:
-        "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAalpLQu9Fkn/R3WylORAad6UB0XAOowFIjF2/FwAyjpc=\n-----END PUBLIC KEY-----",
     });
     const patchEnvironmentVariables = (environment: Record<string, string>) => {
       Object.assign(Bun.env, environment);

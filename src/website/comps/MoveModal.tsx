@@ -80,7 +80,7 @@ export function MoveModal<T>({ title, folders, currentParentId, disabled = () =>
           <p className="text-sm text-c-dark-half mt-1">Pick a folder. Folders can live inside folders.</p>
         </div>
         <div className="bg-c-paper border border-c-line rounded-xl p-1 max-h-80 overflow-auto">
-          {row("root", 0, "Library", null, false, <Logo.Mark className="h-5" />)}
+          {row("root", 0, "Library", null, false, <Logo.Mark className="h-3" />)}
           {rows.map(({ folder, depth }) =>
             row(folder.id, depth, folder.name, folder.id, disabled(folder.id), <Icon.Folder className="h-4 text-c-dark-full" />),
           )}

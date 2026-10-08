@@ -26,7 +26,6 @@ export class ClientRegistry {
       EXCALIBEE_VERSION: env.EXCALIBEE_VERSION,
       EXCALIBEE_COMMIT: env.EXCALIBEE_COMMIT,
       EXCALIBEE_TIMEZONE: env.EXCALIBEE_TIMEZONE,
-      EXCALIBEE_SUPPORTER: env.EXCALIBEE_SUPPORTER,
     };
     const longestKey = Object.keys(envCopy)
       .map((k) => k.length)
